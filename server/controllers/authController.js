@@ -1,5 +1,16 @@
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+
+const generateToken = (userId) => {
+  return jwt.sign(
+    { id: userId },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
+};
 
 // Register User
 exports.register = async (req, res) => {
@@ -33,14 +44,69 @@ exports.register = async (req, res) => {
       passwordHash,
     });
 
-    res.status(201).json({
-      message: "User registered successfully",
+  res.status(201).json({
+  message: "User registered successfully",
+  token: generateToken(user._id),
+  user: {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+  },
+});
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+
+
+// Login User
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check required fields
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and password are required",
+      });
+    }
+
+    // Find user
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
+
+    // Compare password
+    const isMatch = await bcrypt.compare(
+      password,
+      user.passwordHash
+    );
+
+    if (!isMatch) {
+      return res.status(400).json({
+        message: "Invalid credentials",
+      });
+    }
+
+    res.status(200).json({
+      message: "Login successful",
+      token: generateToken(user._id),
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
       },
     });
+
   } catch (error) {
     console.error(error);
 
