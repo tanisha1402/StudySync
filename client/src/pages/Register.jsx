@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
 import "../styles/Auth.css";
-import logo from "../assets/studysync-logo.jpeg";
+import logo from "../assets/studysync-logo.png";
 
 function Register() {
   const navigate = useNavigate();
