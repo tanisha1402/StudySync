@@ -44,6 +44,7 @@ function Register() {
         data.token
       );
 
+      
 
       navigate("/");
 
