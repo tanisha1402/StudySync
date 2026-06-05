@@ -44,7 +44,7 @@ function Register() {
         data.token
       );
 
-      alert("Registration Successful!");
+      
 
       navigate("/");
 
