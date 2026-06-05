@@ -35,7 +35,6 @@ function Login() {
         JSON.stringify(data.user)
       );
 
-      alert("Login Successful!");
 
       navigate("/dashboard");
 
