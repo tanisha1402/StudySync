@@ -1,6 +1,21 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
 import logo from "../assets/studysync-logo.png";
+import { MdDashboard, MdSettings, MdLogout } from "react-icons/md";
+import {
+  FaTasks,
+  FaCalendarAlt,
+  FaStickyNote,
+  FaFolder,
+  FaUser,
+  FaClock,
+  FaChartLine,
+  FaClipboardList,
+  FaRegCircle,
+  FaCheckCircle,
+  FaEye,
+  FaArchive,
+} from "react-icons/fa";
 
 function Dashboard() {
   const [stats, setStats] = useState({
@@ -15,16 +30,11 @@ function Dashboard() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     fetch("http://localhost:5000/api/dashboard", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
-      .then((data) => {
-        setStats(data);
-      })
+      .then((data) => setStats(data))
       .catch((err) => console.log(err));
   }, []);
 
@@ -38,83 +48,108 @@ function Dashboard() {
 
       {/* Sidebar */}
       <div className="sidebar">
-
         <div>
-
           <div className="logo-section">
-            <img
-              src={logo}
-              alt="StudySync"
-              className="sidebar-logo"
-            />
-
-            <h2>StudySync</h2>
+            <img src={logo} alt="StudySync" className="sidebar-logo" />
+            <span className="logo-text">StudySync</span>
           </div>
 
-          <ul className="menu">
-            <li className="active">Dashboard</li>
-            <li>My Tasks</li>
-            <li>Calendar</li>
-            <li>Notes</li>
-            <li>Project</li>
-            <li>Settings</li>
-          </ul>
+          <p className="menu-label">MAIN MENU</p>
 
+          <ul className="menu">
+            <li className="active">
+              <MdDashboard className="icon" />
+              Dashboard
+            </li>
+            <li>
+              <FaTasks className="icon" />
+              My Tasks
+            </li>
+            <li>
+              <FaCalendarAlt className="icon" />
+              Calendar
+            </li>
+            <li>
+              <FaStickyNote className="icon" />
+              Notes
+            </li>
+            <li>
+              <FaFolder className="icon" />
+              Projects
+            </li>
+            <li>
+              <MdSettings className="icon" />
+              Settings
+            </li>
+          </ul>
         </div>
 
-        <button
-          className="logout-btn"
-          onClick={logout}
-        >
-          Logout
-        </button>
-
+        <div className="sidebar-bottom">
+          <div className="user-info">
+            <div className="user-avatar">
+              {user?.name?.charAt(0).toUpperCase()}
+            </div>
+            <div>
+              <p className="user-name">{user?.name}</p>
+              <p className="user-role">Student</p>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={logout}>
+            <MdLogout className="icon" /> Logout
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}
       <div className="main-content">
 
-        <h1>
-          Welcome Back, {user?.name}
-        </h1>
-
-        
-
-        {/* Project Overview */}
+        {/* Project Card */}
         <div className="project-card">
+          <div className="project-card-top">
+            <div>
+              <h2>StudySync</h2>
+              <p>
+                Manage your study tasks, notes and
+                project progress efficiently in one place.
+              </p>
+            </div>
+          </div>
 
-  <h2>StudySync</h2>
+          <div className="project-info">
+            <div className="info-box">
+              <FaUser className="info-icon" />
+              <div>
+                <p className="info-label">User</p>
+                <p className="info-value">{user?.name}</p>
+              </div>
+            </div>
 
-  <p>
-    Manage your study tasks, notes and project
-    progress efficiently in one place.
-  </p>
+            <div className="info-box">
+              <FaClipboardList className="info-icon" />
+              <div>
+                <p className="info-label">Total Tasks</p>
+                <p className="info-value">{stats.totalTasks}</p>
+              </div>
+            </div>
 
-  <div className="project-info">
+            <div className="info-box">
+              <FaClock className="info-icon" />
+              <div>
+                <p className="info-label">Pending</p>
+                <p className="info-value">{stats.pendingTasks}</p>
+              </div>
+            </div>
 
-    <div>
-      <h4>User</h4>
-      <span>{user?.name}</span>
-    </div>
+            <div className="info-box">
+              <FaChartLine className="info-icon" />
+              <div>
+                <p className="info-label">Progress</p>
+                <p className="info-value">{stats.completionRate}%</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-    <div>
-      <h4>Total Tasks</h4>
-      <span>{stats.totalTasks}</span>
-    </div>
-
-    <div>
-    <h4>Pending</h4>
-    <span>{stats.pendingTasks}</span>
-    </div>
-
-    <div>
-      <h4>Progress</h4>
-      <span>{stats.completionRate}%</span>
-    </div>
-
-  </div>
-
-</div>
         {/* Tabs */}
         <div className="board-tabs">
           <span className="active-tab">Task Board</span>
@@ -126,15 +161,22 @@ function Dashboard() {
         <div className="board-columns">
 
           <div className="board-column">
-            <h3>To Do ({stats.pendingTasks})</h3>
-
+            <div className="column-header">
+              <FaRegCircle className="col-icon" />
+              <h3>To Do</h3>
+              <span className="count">{stats.pendingTasks}</span>
+            </div>
+            {stats.recentTasks?.filter(
+              (t) => !t.completed
+            ).length === 0 && (
+              <div className="empty-col">
+                <p>No tasks yet</p>
+              </div>
+            )}
             {stats.recentTasks
-              ?.filter((task) => !task.completed)
+              ?.filter((t) => !t.completed)
               .map((task) => (
-                <div
-                  key={task._id}
-                  className="task-card"
-                >
+                <div key={task._id} className="task-card">
                   <h4>{task.title}</h4>
                   <p>{task.description}</p>
                 </div>
@@ -142,17 +184,22 @@ function Dashboard() {
           </div>
 
           <div className="board-column">
-            <h3>
-              Completed ({stats.completedTasks})
-            </h3>
-
+            <div className="column-header">
+              <FaCheckCircle className="col-icon" />
+              <h3>Completed</h3>
+              <span className="count">{stats.completedTasks}</span>
+            </div>
+            {stats.recentTasks?.filter(
+              (t) => t.completed
+            ).length === 0 && (
+              <div className="empty-col">
+                <p>Nothing completed yet</p>
+              </div>
+            )}
             {stats.recentTasks
-              ?.filter((task) => task.completed)
+              ?.filter((t) => t.completed)
               .map((task) => (
-                <div
-                  key={task._id}
-                  className="task-card"
-                >
+                <div key={task._id} className="task-card">
                   <h4>{task.title}</h4>
                   <p>{task.description}</p>
                 </div>
@@ -160,27 +207,27 @@ function Dashboard() {
           </div>
 
           <div className="board-column">
-            <h3>Review</h3>
-
-            <div className="task-card">
-              <h4>No Tasks</h4>
+            <div className="column-header">
+              <FaEye className="col-icon" />
+              <h3>Review</h3>
+            </div>
+            <div className="empty-col">
               <p>Add review tasks later</p>
             </div>
           </div>
 
           <div className="board-column">
-            <h3>Archive</h3>
-
-            <div className="task-card">
-              <h4>No Files</h4>
+            <div className="column-header">
+              <FaArchive className="col-icon" />
+              <h3>Archive</h3>
+            </div>
+            <div className="empty-col">
               <p>Archived tasks appear here</p>
             </div>
           </div>
 
         </div>
-
       </div>
-
     </div>
   );
 }
