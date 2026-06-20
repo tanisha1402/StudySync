@@ -1,3 +1,4 @@
+
 * {
   margin: 0;
   padding: 0;
@@ -124,11 +125,13 @@
   color: white;
   font-size: 13px;
   font-weight: 600;
+  text-align: left;
 }
 
 .user-role {
   color: #6b7280;
   font-size: 11px;
+  text-align: left;
 }
 
 .logout-btn {
@@ -363,3 +366,30 @@
 .icon-completed { color: #34d399; }
 .icon-review { color: #fbbf24; }
 .icon-archive { color: #a78bfa; }
+.icon-overdue { color: #f87171; }
+.icon-upcoming { color: #fbbf24; }
+.col-icon { font-size: 16px; color: #9ca3af; }
+.info-icon { font-size: 24px; color: #9ca3af; }
+.icon { font-size: 16px; color: #9ca3af; }
+.menu li.active .icon { color: #38bdf8; }
+
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.page-title h1 {
+  color: white;
+  font-size: 24px;
+  margin-bottom: 4px;
+  text-align: left;
+}
+
+.page-title p {
+  color: #6b7280;
+  font-size: 13px;
+  text-align: left;
+}
+
