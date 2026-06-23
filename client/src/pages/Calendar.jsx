@@ -27,14 +27,19 @@ function Calendar() {
   const [selectedDay, setSelectedDay] = useState(null);
   const [selectedDayEvents, setSelectedDayEvents] = useState([]);
 
-  useEffect(() => { loadEvents(); }, []);
-
   const loadEvents = async () => {
     try {
       const data = await getEvents();
       setEvents(data);
     } catch (err) { console.log(err); }
   };
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      await loadEvents();
+    };
+    fetchEvents();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -101,20 +106,16 @@ function Calendar() {
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // timezone fix — local date compare
   const getEventsForDay = (day) => {
     return events.filter(event => {
       const eventDate = new Date(event.date);
       const eventDay = eventDate.getDate();
       const eventMonth = eventDate.getMonth();
       const eventYear = eventDate.getFullYear();
-      
-      console.log(`Event: ${event.title}, Day: ${eventDay}, Month: ${eventMonth}, Year: ${eventYear}`);
-      console.log(`Comparing with: Day: ${day}, Month: ${month}, Year: ${year}`);
-      
       return eventDay === day && eventMonth === month && eventYear === year;
     });
   };
+
   const handleDayClick = (day, dayEvents) => {
     if (dayEvents.length === 0) return;
     setSelectedDay(day);
@@ -162,7 +163,9 @@ function Calendar() {
             <li className="active" onClick={() => navigate("/calendar")}>
               <FaCalendarAlt className="icon" /> Calendar
             </li>
-            <li><FaStickyNote className="icon" /> Notes</li>
+            <li onClick={() => navigate("/notes")}>
+              <FaStickyNote className="icon" /> Notes
+            </li>
             <li><FaFolder className="icon" /> Projects</li>
             <li><MdSettings className="icon" /> Settings</li>
           </ul>
@@ -320,18 +323,17 @@ function Calendar() {
                 >
                   <span className="day-num">{day}</span>
                   <div className="day-events">
-  {dayEvents.length > 0 && (
-    <div className="cal-event">
-      {dayEvents[0].title}
-    </div>
-  )}
-
-  {dayEvents.length > 1 && (
-    <div className="more-events">
-      +{dayEvents.length - 1} more
-    </div>
-  )}
-</div>
+                    {dayEvents.length > 0 && (
+                      <div className="cal-event">
+                        {dayEvents[0].title}
+                      </div>
+                    )}
+                    {dayEvents.length > 1 && (
+                      <div className="more-events">
+                        +{dayEvents.length - 1} more
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })}
