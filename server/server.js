@@ -10,6 +10,10 @@ const dashboardRoutes = require(
 const eventRoutes = require(
   "./routes/eventRoutes"
 );
+const noteRoutes = require(
+  "./routes/noteRoutes"
+);
+
 
 dotenv.config();
 connectDB();
@@ -38,6 +42,11 @@ app.use(
 app.use(
   "/api/events",
   eventRoutes
+);
+
+app.use(
+  "/api/notes",
+  noteRoutes
 );
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

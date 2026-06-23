@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Tasks.css";
 import logo from "../assets/studysync-logo.png";
@@ -27,14 +27,30 @@ function Tasks() {
   });
   const [filter, setFilter] = useState("all");
 
-  useEffect(() => { loadTasks(); }, []);
+  
 
-  const loadTasks = async () => {
-    try {
-      const data = await getTasks();
+  const loadTasks = useCallback(async () => {
+  try {
+    const data = await getTasks();
+
+    if (Array.isArray(data)) {
       setTasks(data);
-    } catch (err) { console.log(err); }
-  };
+    } else {
+      setTasks([]);
+    }
+
+  } catch (error) {
+    console.log("Error loading tasks:", error);
+    setTasks([]);
+  }
+}, []);
+
+  useEffect(() => {
+    const fetchTasks = async () =>{
+      await loadTasks();
+    };
+    fetchTasks();
+  },[loadTasks]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -144,7 +160,10 @@ function Tasks() {
             <li onClick={() => navigate("/calendar")}>
               <FaCalendarAlt className="icon" /> Calendar
             </li>
-            <li><FaStickyNote className="icon" /> Notes</li>
+            <li onClick={() => navigate("/notes")}>
+  <FaStickyNote className="icon" />
+  Notes
+</li>
             <li><FaFolder className="icon" /> Projects</li>
             <li><MdSettings className="icon" /> Settings</li>
           </ul>

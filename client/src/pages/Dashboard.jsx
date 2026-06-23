@@ -62,9 +62,10 @@ function Dashboard() {
             <li onClick={() => navigate("/calendar")}>
               <FaCalendarAlt className="icon" /> Calendar
             </li>
-            <li>
-              <FaStickyNote className="icon" /> Notes
-            </li>
+            <li onClick={() => navigate("/notes")}>
+  <FaStickyNote className="icon" />
+  Notes
+</li>
             <li>
               <FaFolder className="icon" /> Projects
             </li>

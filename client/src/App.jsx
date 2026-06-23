@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Tasks from "./pages/Tasks";
 import Calendar from "./pages/Calendar";
+import Notes from "./pages/Notes";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tasks" element={<Tasks />} />
         <Route path="/calendar" element={<Calendar />} />
+        <Route 
+  path="/notes"
+  element={<Notes />}
+/>
       </Routes>
     </BrowserRouter>
   );
