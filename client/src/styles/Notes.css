@@ -184,9 +184,11 @@
 }
 
 .note-content p {
-  color: #6b7280;
-  font-size: 12px;
-
+  display: -webkit-box;
+  -webkit-line-clamp: 3; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .note-date {
   color: #6b7280;
